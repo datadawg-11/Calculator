@@ -1,0 +1,39 @@
+h1 {
+    text-align: center;
+
+}
+
+h2 {
+    text-align: center;
+    border:5px solid grey;
+    height: 50px;
+    /* width: 50%; */
+    ;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    
+    
+}
+
+.grid-container >div {
+    text-align: center;
+    background-color: lightblue;
+    border:1px solid black;
+    padding:2px;
+    position: relative;
+}
+
+#plus {
+    grid-column: 4;
+    /* grid-row: 2/4; */
+}
+
+#enter {
+    grid-column: 4;
+    grid-row: 3/5;
+    vertical-align: middle;
+
+}
