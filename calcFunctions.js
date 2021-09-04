@@ -8,7 +8,7 @@ const operate = (call,a,b) => call(a,b)
 // Create an object to store the values of calculator
 const calc = {
     dispValue:'0',
-    firstNum:null,
+    firstNum:'',
     operand:null,
     secondNum:false 
 }
@@ -20,32 +20,74 @@ function updateDisp() {
 }
 
 
-
-
-
-
 const buttonInput = document.getElementById('wrapper')
+var sequence = Array();
 
 buttonInput.addEventListener('click', event => {
-    console.log(event)
+    // console.log(event)
+    sequence.push(event.target.className);
+    console.log(sequence);
+
+    var uniqueElements = sequence.reduce((acc, val) => {
+        acc[val] = acc[val] === undefined ? 1 : acc[val] +=1;
+        return acc
+        
+    }, {})
+    console.log(uniqueElements)
+
     if (event.target.className.includes('operator')) {
         console.log('Its an operator',event.target.outerText)
-        
-        
+        console.log(typeof event.target.outerText)
+        operand(event);
     }
+    else if ('number' in uniqueElements && 'operator' in uniqueElements && event.target.className.includes('number')) {
+        console.log('yess there iss number and operator')
+        objSecondNumUpdate(event)
+    }    
+    
     else if (event.target.className.includes('number')) {
         console.log('Its a number',event.target.outerText)
-        generator(event)
+        
+        objFirstNumUpdate(event);
+        updateDisp();
     }
+console.log(calc)
 })
 
-function generator(evt) {
+function objFirstNumUpdate(evt) {
     let str='';
     let x = evt.target.outerText; 
-    str+=x
-    console.log(str)
+    console.log(`x equals ${x}`)
+    calc['firstNum'] = calc['firstNum'] + x;
+    calc['dispValue'] = calc['dispValue'] + x;
 }
 
+function objSecondNumUpdate(evt) {
+    let str='';
+    let x = evt.target.outerText; 
+    console.log(`x equals ${x}`)
+    calc['secondNum'] = calc['secondNum'] + x;
+    // calc['dispValue'] = calc['dispValue'] + x;
+}
+
+function operand(evt) {
+    if (evt.target.outerText === '/') {
+        calc['operand'] = 'divide'
+        console.log('hellow oworld')
+    }
+
+    else if (evt.target.outerText ==='*') {
+        calc['operand'] = 'multiply'
+    }
+
+    else if (evt.target.outerText === '+') {
+        calc['operand'] = 'add'
+    }
+
+    else if (evt.target.outerText === '-') {
+        calc['operand'] = 'subtract'
+    }
+}
 
 // buttonInput.forEach(btn => {
 //     btn.addEventListener('click', event => {
