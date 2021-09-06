@@ -1,16 +1,16 @@
 const add = (a,b) => a+b; 
 const subtract = (a,b) => a-b;
 const multiple = (a,b) => a*b;
-const buttonide = (a,b) => a/b;
+const divide = (a,b) => a/b;
 
 const operate = (call,a,b) => call(a,b)
 
 // Create an object to store the values of calculator
 const calc = {
-    dispValue:'0',
+    dispValue:'0123456789',
     firstNum:'',
     operand:null,
-    secondNum:false 
+    secondNum:'' 
 }
 
 // Create a function that can be called to update the screen
@@ -18,31 +18,50 @@ function updateDisp() {
     const display = document.querySelector('h2'); 
     display.textContent = calc.dispValue;
 }
+updateDisp()
 
-
+// Create a variable to store access to buttons
 const buttonInput = document.getElementById('wrapper')
-var sequence = Array();
+var sequence = Array(); //create an empty array to store button clicks
 
+// Add an event listener to the buttons
 buttonInput.addEventListener('click', event => {
-    // console.log(event)
-    sequence.push(event.target.className);
+    sequence.push(event.target.className); //push the class name to array
     console.log(sequence);
 
+    // Use reduce to find value_counts of the actions in array
     var uniqueElements = sequence.reduce((acc, val) => {
         acc[val] = acc[val] === undefined ? 1 : acc[val] +=1;
         return acc
-        
     }, {})
+    
     console.log(uniqueElements)
 
-    if (event.target.className.includes('operator')) {
+    if (event.target.className.includes('operatorClear')) {
+        console.log('Its a clear operator selected',event.target.outerText)
+        console.log(typeof event.target.outerText)
+
+        calc.dispValue = '';
+        calc.firstNum = '';
+        calc.secondNum = '';
+        calc.operand = ''; 
+
+        sequence = [];
+        updateDisp();
+
+    }
+
+    else if (event.target.className.includes('operator')) {
         console.log('Its an operator',event.target.outerText)
         console.log(typeof event.target.outerText)
         operand(event);
     }
     else if ('number' in uniqueElements && 'operator' in uniqueElements && event.target.className.includes('number')) {
         console.log('yess there iss number and operator')
+               
+        
         objSecondNumUpdate(event)
+        updateDisp();
     }    
     
     else if (event.target.className.includes('number')) {
@@ -51,9 +70,18 @@ buttonInput.addEventListener('click', event => {
         objFirstNumUpdate(event);
         updateDisp();
     }
+
+    else if (event.target.className.includes('result')) {
+        console.log('We want the result',event.target.outerText)
+        
+        answer()
+        updateDisp();
+    }
+
 console.log(calc)
 })
 
+// Function below updates the first number key in calc object
 function objFirstNumUpdate(evt) {
     let str='';
     let x = evt.target.outerText; 
@@ -62,46 +90,79 @@ function objFirstNumUpdate(evt) {
     calc['dispValue'] = calc['dispValue'] + x;
 }
 
+// Function below updates the second number key in calc object
 function objSecondNumUpdate(evt) {
     let str='';
-    let x = evt.target.outerText; 
+    let x = evt.target.outerText;
+    const reg = /[-*+=/]/g
     console.log(`x equals ${x}`)
+    
     calc['secondNum'] = calc['secondNum'] + x;
-    // calc['dispValue'] = calc['dispValue'] + x;
+    calc['dispValue'] = calc['dispValue'] + x;
+    console.log('The display value is ', calc['dispVal'])
+    calc['dispValue'] = calc['dispValue'].replace(reg,'')
+
 }
 
 function operand(evt) {
     if (evt.target.outerText === '/') {
         calc['operand'] = 'divide'
-        console.log('hellow oworld')
+        calc['dispValue'] = '/'
+        updateDisp()
     }
 
     else if (evt.target.outerText ==='*') {
         calc['operand'] = 'multiply'
+        calc['dispValue'] = '*'
+        updateDisp()
     }
 
     else if (evt.target.outerText === '+') {
         calc['operand'] = 'add'
+        calc['dispValue'] = '+'
+        updateDisp()
     }
 
     else if (evt.target.outerText === '-') {
         calc['operand'] = 'subtract'
+        calc['dispValue'] = '-'
+        updateDisp()
     }
 }
 
-// buttonInput.forEach(btn => {
-//     btn.addEventListener('click', event => {
-//         if (event.target.outerText === "Clear") {
-//             displayText.textContent = ''
-        
-//         } else {
-//             // while ((parseInt(event.target.outerText)) === 'number') {
-                
-//                 userInput = event.target.outerText;
-//                 console.log(userInput)
-//                 // displayText.textContent = userInput;  
-//             }  
-//         })
+function answer() {
+    console.log('we are within the answer nested function')
     
-// })
+    var a = Number(calc['firstNum']);
+    var b = Number(calc['secondNum'])
+    var c = 0;
+    console.log('value of a is',a)
+    console.log('value of b is',b)
+
+
+    if (calc['operand'] === 'divide') {
+        console.log('its a divide in the obj')
+        c = divide(a,b)
+        
+    }
+
+    else if (calc['operand'] === 'add') {
+        console.log('its a add in the obj')
+        c = add(a,b)
+        
+    }
+
+    else if (calc['operand'] === 'subtract') {
+        console.log('its a subtract in the obj')
+        c = subtract(a,b)
+      }
+
+    else if (calc['operand'] === 'multiply') {
+        console.log('its a multiply in the obj')
+        c = multiple(a,b)
+    }
+    
+    calc['dispValue'] = c;
+}
+
 
