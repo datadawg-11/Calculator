@@ -78,7 +78,7 @@ buttonInput.addEventListener('click', event => {
     }
 
     else if (event.target.className.includes('result')) {
-        // console.log('We want the result',event.target.outerText)
+        console.log('We want the result',event.target.outerText)
         
         answer()
         updateDisp();
@@ -144,33 +144,39 @@ function answer() {
     var a = Number(calc['firstNum']);
     var b = Number(calc['secondNum'])
     var c = 0;
-    // console.log('value of a is',a)
-    // console.log('value of b is',b)
+    console.log('value of a is',a)
+    console.log('value of b is',b)
 
 
     if (calc['operand'] === 'divide') {
         // console.log('its a divide in the obj')
         c = divide(a,b)
         
+
+        
     }
 
     else if (calc['operand'] === 'add') {
         // console.log('its a add in the obj')
         c = add(a,b)
+
         
     }
 
     else if (calc['operand'] === 'subtract') {
         // console.log('its a subtract in the obj')
         c = subtract(a,b)
+
       }
 
     else if (calc['operand'] === 'multiply') {
         // console.log('its a multiply in the obj')
         c = multiple(a,b)
+
     }
-    
-    calc['holdingVal'] = c
+
+    c = numberFormatting(c)
+    calc['holdingVal'] = c;
     calc['dispValue'] = c;
     console.log('calc upject shud be updated')
 }
@@ -189,4 +195,8 @@ function updateHoldingVal(obj) {
         calc['secondNum'] = ''
     }
  //   }
+}
+
+function numberFormatting(num) {
+    return (num%1!=0) ? num.toFixed(6) :  num 
 }
